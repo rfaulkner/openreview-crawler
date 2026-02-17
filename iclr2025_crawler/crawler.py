@@ -42,35 +42,59 @@ class ICLRCrawler:
     def get_papers(self, limit: int = 100, offset: int = 0) -> List[Paper]:
         notes = self.client.get_submissions(self.SUBMISSION_INVITATION)
         papers = []
-        # Manual slicing since get_all_notes might return everything or we want to limit locally if the API wrapper doesn't support strict limit on get_all_notes in the way we expect, 
-        # but openreview-py's get_all_notes iterates. 
-        # Actually get_all_notes fetches everything. Use slicing on the result.
         
         for note in notes[offset : offset + limit]:
-            papers.append(self._parse_paper(note))
+            paper = self._parse_paper(note)
+            try:
+                self._enrich_paper(paper)
+            except Exception as e:
+                print(f"Error enriching paper {paper.id}: {e}")
+            papers.append(paper)
         return papers
 
     def get_reviews(self, paper_id: str) -> List[Review]:
         notes = self.client.get_notes(forum=paper_id)
         reviews = []
         for note in notes:
-            # Filter for actual reviews, usually invitation contains 'Official_Review' or similar
-            # For ICLR 2025 it might be 'ICLR.cc/2025/Conference/Submission/-/Official_Review'
             if 'Official_Review' in note.invitation: 
                 reviews.append(self._parse_review(note))
         return reviews
 
+    def _get_decision(self, notes: List[any]) -> Optional[str]:
+        for note in notes:
+            if 'Decision' in note.invitation:
+                return note.content.get('decision', None)
+        return None
+
+    def _enrich_paper(self, paper: Paper):
+        notes = self.client.get_notes(forum=paper.id)
+        
+        # Parse reviews
+        reviews = []
+        for note in notes:
+            if 'Official_Review' in note.invitation:
+                reviews.append(self._parse_review(note))
+        paper.reviews = reviews
+        
+        # Parse decision
+        paper.decision = self._get_decision(notes)
+        
+        # Calculate average rating
+        ratings = [r.rating for r in reviews if r.rating is not None]
+        if ratings:
+            paper.avg_rating = sum(ratings) / len(ratings)
+
     def crawl(self, limit: int = 100) -> Generator[Paper, None, None]:
         """
         Crawls papers and their reviews.
-        Yields Paper objects with the 'reviews' field populated.
+        Yields Paper objects with the 'reviews', 'decision', and 'avg_rating' fields populated.
         """
         submissions = self.client.get_submissions(self.SUBMISSION_INVITATION)
         
         for note in tqdm(submissions[:limit], desc="Crawling Papers"):
             paper = self._parse_paper(note)
             try:
-                paper.reviews = self.get_reviews(paper.id)
+                self._enrich_paper(paper)
             except Exception as e:
-                print(f"Error fetching reviews for paper {paper.id}: {e}")
+                print(f"Error enriching paper {paper.id}: {e}")
             yield paper

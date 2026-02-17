@@ -14,6 +14,8 @@ def main():
             print(f"ID: {paper.id}")
             print(f"Title: {paper.title}")
             print(f"Authors: {', '.join(paper.authors)}")
+            print(f"Decision: {paper.decision}")
+            print(f"Avg Rating: {paper.avg_rating}")
             print(f"Abstract: {paper.abstract[:100]}...")
             print(f"Reviews: {len(paper.reviews)}")
             

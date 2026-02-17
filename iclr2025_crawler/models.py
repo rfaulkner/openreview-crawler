@@ -22,5 +22,6 @@ class Paper:
     keywords: List[str] = field(default_factory=list)
     reviews: List[Review] = field(default_factory=list)
     decision: Optional[str] = None
+    avg_rating: Optional[float] = None
     status: str = "Unknown"
     
