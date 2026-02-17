@@ -35,8 +35,16 @@ def debug_api():
         try:
             notes = client.get_all_notes(invitation=inv_id, limit=1)
             if notes:
-                print(f"  -> SUCCESS! Found {len(notes)} note(s). ID: {notes[0].id}")
-                print(f"  -> Content keys: {notes[0].content.keys()}")
+                note = notes[0]
+                print(f"  -> SUCCESS! Found {len(notes)} note(s). ID: {note.id}")
+                print(f"  -> Object dir: {dir(note)}")
+                # Check for invitations attribute (V2)
+                if hasattr(note, 'invitations'):
+                    print(f"  -> note.invitations: {note.invitations}")
+                elif hasattr(note, 'invitation'):
+                    print(f"  -> note.invitation: {note.invitation}")
+                else:
+                    print("  -> Neither 'invitation' nor 'invitations' attribute found directly.")
             else:
                 print("  -> No notes found.")
         except Exception as e:

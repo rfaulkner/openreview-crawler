@@ -57,7 +57,7 @@ class ICLRCrawler:
             confidence=confidence,
             title=self._get_content_value(content, 'title'),
             review_text=self._get_content_value(content, 'review', ''),
-            invitation=note.invitation,
+            invitation=note.invitations[0] if note.invitations else "",
             reply_to=note.replyto
         )
 
@@ -78,13 +78,15 @@ class ICLRCrawler:
         notes = self.client.get_notes(forum=paper_id)
         reviews = []
         for note in notes:
-            if 'Official_Review' in note.invitation: 
+            # Check if any invitation matches 'Official_Review'
+            if note.invitations and any('Official_Review' in inv for inv in note.invitations): 
                 reviews.append(self._parse_review(note))
         return reviews
 
     def _get_decision(self, notes: List[any]) -> Optional[str]:
         for note in notes:
-            if 'Decision' in note.invitation:
+            # Check if any invitation matches 'Decision'
+            if note.invitations and any('Decision' in inv for inv in note.invitations):
                 return self._get_content_value(note.content, 'decision', None)
         return None
 
