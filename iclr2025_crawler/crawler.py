@@ -1,4 +1,4 @@
-from typing import Generator, List, Optional
+from typing import Generator, List, Optional, Any
 from .client import OpenReviewClient
 from .models import Paper, Review
 try:
@@ -14,27 +14,49 @@ class ICLRCrawler:
     def __init__(self, client: Optional[OpenReviewClient] = None):
         self.client = client or OpenReviewClient()
 
+    def _get_content_value(self, content: dict, key: str, default: Any = None) -> Any:
+        if key in content:
+            return content[key].get('value', default)
+        return default
+
     def _parse_paper(self, note) -> Paper:
         content = note.content
         return Paper(
             id=note.id,
-            title=content.get('title', ''),
-            authors=content.get('authors', []),
-            abstract=content.get('abstract', ''),
+            title=self._get_content_value(content, 'title', ''),
+            authors=self._get_content_value(content, 'authors', []),
+            abstract=self._get_content_value(content, 'abstract', ''),
             pdf_url=f"https://openreview.net/pdf?id={note.id}",
-            keywords=content.get('keywords', []),
-            status="Submitted" # Default, can be updated if decision is found
+            keywords=self._get_content_value(content, 'keywords', []),
+            status="Submitted"
         )
 
     def _parse_review(self, note) -> Review:
         content = note.content
+        rating_val = self._get_content_value(content, 'rating')
+        confidence_val = self._get_content_value(content, 'confidence')
+        
+        # Rating format might be "8: ..." or just integer in V2. 
+        # Safely handle string split if it's a string, or direct int.
+        rating = None
+        if isinstance(rating_val, str):
+            rating = int(rating_val.split(':')[0])
+        elif isinstance(rating_val, (int, float)):
+            rating = int(rating_val)
+            
+        confidence = None
+        if isinstance(confidence_val, str):
+            confidence = int(confidence_val.split(':')[0])
+        elif isinstance(confidence_val, (int, float)):
+            confidence = int(confidence_val)
+
         return Review(
             id=note.id,
             reviewer=note.signatures[0] if note.signatures else "Anonymous",
-            rating=int(content['rating'].split(':')[0]) if 'rating' in content else None,
-            confidence=int(content['confidence'].split(':')[0]) if 'confidence' in content else None,
-            title=content.get('title'),
-            review_text=content.get('review', ''),
+            rating=rating,
+            confidence=confidence,
+            title=self._get_content_value(content, 'title'),
+            review_text=self._get_content_value(content, 'review', ''),
             invitation=note.invitation,
             reply_to=note.replyto
         )
@@ -63,7 +85,7 @@ class ICLRCrawler:
     def _get_decision(self, notes: List[any]) -> Optional[str]:
         for note in notes:
             if 'Decision' in note.invitation:
-                return note.content.get('decision', None)
+                return self._get_content_value(note.content, 'decision', None)
         return None
 
     def _enrich_paper(self, paper: Paper):
