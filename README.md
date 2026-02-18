@@ -106,3 +106,70 @@ for paper in rejected_papers[:5]:
 - `rating`: Rating score
 - `confidence`: Reviewer confidence
 - `review_text`: Main review content
+
+## Example Output
+
+```bash
+==================================================
+ TOP 3 ACCEPTED PAPERS (Highest Rated)
+==================================================
+Title: Probabilistic Learning to Defer: Handling Missing Expert Annotations and Controlling Workload Distribution
+Decision: Accept (Oral)
+Avg Rating: 8.00
+Review Summary:
+  - Review 1: Rating 8/10.
+  - Review 2: Rating 8/10.
+  - Review 3: Rating 8/10.
+  - Review 4: Rating 8/10.
+----------------------------------------
+Title: Kinetix: Investigating the Training of General Agents through Open-Ended Physics-Based Control Tasks
+Decision: Accept (Oral)
+Avg Rating: 8.00
+Review Summary:
+  - Review 1: Rating 8/10.
+  - Review 2: Rating 8/10.
+  - Review 3: Rating 8/10.
+  - Review 4: Rating 8/10.
+----------------------------------------
+Title: Joint Graph Rewiring and Feature Denoising via Spectral Resonance
+Decision: Accept (Oral)
+Avg Rating: 8.00
+Review Summary:
+  - Review 1: Rating 8/10.
+  - Review 2: Rating 8/10.
+  - Review 3: Rating 8/10.
+  - Review 4: Rating 8/10.
+  - Review 5: Rating 8/10.
+----------------------------------------
+
+==================================================
+ TOP 3 REJECTED PAPERS (Lowest Rated)
+==================================================
+Title: Differentiable Implicit Solver on Graph Neural Networks for Forward and Inverse Problems
+Decision: Reject
+Avg Rating: 2.00
+Review Summary:
+  - Review 1: Rating 3/10.
+  - Review 2: Rating 1/10.
+  - Review 3: Rating 3/10.
+  - Review 4: Rating 1/10.
+----------------------------------------
+Title: From Counseling Transcript to Mind Map: Leveraging LLMs for Effective Summarization in Mental Health Counseling
+Decision: Reject
+Avg Rating: 2.00
+Review Summary:
+  - Review 1: Rating 3/10.
+  - Review 2: Rating 1/10.
+  - Review 3: Rating 1/10.
+  - Review 4: Rating 3/10.
+----------------------------------------
+Title: Quantized Approximately Orthogonal Recurrent Neural Networks
+Decision: Reject
+Avg Rating: 3.00
+Review Summary:
+  - Review 1: Rating 3/10.
+  - Review 2: Rating 3/10.
+  - Review 3: Rating 5/10.
+  - Review 4: Rating 1/10.
+----------------------------------------
+```
