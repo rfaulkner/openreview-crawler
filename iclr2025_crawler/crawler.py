@@ -96,7 +96,8 @@ class ICLRCrawler:
         # Parse reviews
         reviews = []
         for note in notes:
-            if 'Official_Review' in note.invitation:
+            # Check if any invitation matches 'Official_Review'
+            if note.invitations and any('Official_Review' in inv for inv in note.invitations):
                 reviews.append(self._parse_review(note))
         paper.reviews = reviews
         
