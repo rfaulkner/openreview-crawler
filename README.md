@@ -1,4 +1,4 @@
-# ICLR 2025 Crawler
+# ICLR Crawler
 
 A Python library to crawl papers, reviews, and decisions from the ICLR 2025 conference using the OpenReview API.
 
