@@ -21,7 +21,11 @@ def main():
             
             if paper.reviews:
                 print("\tFirst Review sample:")
-                pprint(paper.reviews[0])
+                review = paper.reviews[0]
+                print(f"    Rating: {review.rating}")
+                print(f"    Strengths: {review.strengths}")
+                print(f"    Weaknesses: {review.weaknesses}")
+                print(f"    Review Text Snippet: {review.review_text[:100]}...")
                 
     except Exception as e:
         print(f"An error occurred during crawling: {e}")

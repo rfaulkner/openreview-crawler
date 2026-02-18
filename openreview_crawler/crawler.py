@@ -57,6 +57,8 @@ class OpenReviewCrawler:
             confidence=confidence,
             title=self._get_content_value(content, 'title'),
             review_text=self._get_content_value(content, 'review', ''),
+            strengths=self._get_content_value(content, 'strengths'),
+            weaknesses=self._get_content_value(content, 'weaknesses'),
             invitation=note.invitations[0] if note.invitations else "",
             reply_to=note.replyto
         )

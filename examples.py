@@ -10,7 +10,13 @@ def print_paper_details(paper):
             rating = review.rating if review.rating else "N/A"
             # Truncate review text for summary
             text_snippet = review.review_text[:100].replace('\n', ' ') + "..." if review.review_text else ""
-            print(f"  - Review {i}: Rating {rating}/10. {text_snippet}")
+            print(f"  - Review {i}: Rating {rating}/10.")
+            if review.strengths:
+                print(f"    Strengths: {review.strengths[:200]}...")
+            if review.weaknesses:
+                print(f"    Weaknesses: {review.weaknesses[:200]}...")
+            if not review.strengths and not review.weaknesses:
+                 print(f"    Snippet: {text_snippet}")
     else:
         print("  No reviews found.")
     print("-" * 40)

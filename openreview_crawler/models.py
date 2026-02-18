@@ -9,6 +9,8 @@ class Review:
     confidence: Optional[int] = None
     title: Optional[str] = None
     review_text: Optional[str] = None
+    strengths: Optional[str] = None
+    weaknesses: Optional[str] = None
     invitation: str = ""
     reply_to: str = ""
 
