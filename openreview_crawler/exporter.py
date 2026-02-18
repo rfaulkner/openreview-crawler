@@ -24,8 +24,8 @@ def export_papers_to_json(papers: List[Paper], filename: str, venue: str = "ICLR
                 if review.weaknesses:
                     weaknesses_list.append(f"- {review.weaknesses.strip()}")
         
-        strengths_summary = "\n\n".join(strengths_list)
-        weaknesses_summary = "\n\n".join(weaknesses_list)
+        # strengths_summary = "\n\n".join(strengths_list)
+        # weaknesses_summary = "\n\n".join(weaknesses_list)
 
         paper_data = {
             "venue": venue,
@@ -34,8 +34,8 @@ def export_papers_to_json(papers: List[Paper], filename: str, venue: str = "ICLR
             "abstract": paper.abstract,
             "decision": paper.decision if paper.decision else "Pending",
             "review scores": scores,
-            "strengths": strengths_summary,
-            "weaknesses": weaknesses_summary
+            "strengths": strengths_list,
+            "weaknesses": weaknesses_list,
         }
         
         output_data[paper.id] = paper_data
