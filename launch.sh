@@ -10,4 +10,5 @@ fi
 source venv/bin/activate
 
 # run the examples
-python examples.py
+# Run the crawler with arguments
+python crawl.py --limit 5

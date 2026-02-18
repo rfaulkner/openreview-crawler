@@ -14,12 +14,19 @@ Run the setup script to create a virtual environment and install dependencies:
 ./setup.sh
 ```
 
-### 2. Run Examples
+### 2. Run Crawler
 
-Run the example script to see the crawler in action (fetches top rated accepted papers and lowest rated rejected papers from ICLR 2025 by default):
+Run the crawler script to fetch papers and export them to JSON (fetches top rated accepted papers and lowest rated rejected papers from ICLR 2025 by default):
 
 ```bash
 ./launch.sh
+```
+
+Or run the python script directly with arguments:
+
+```bash
+# Fetch top/bottom 10 papers
+python crawl.py --limit 10
 ```
 
 ## Manual Installation
