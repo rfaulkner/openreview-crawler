@@ -7,11 +7,11 @@ except ImportError:
     def tqdm(iterable, **kwargs):
         return iterable
 
-class ICLRCrawler:
-    CONFERENCE_ID = 'ICLR.cc/2025/Conference'
-    SUBMISSION_INVITATION = f'{CONFERENCE_ID}/-/Submission'
+class OpenReviewCrawler:
     
-    def __init__(self, client: Optional[OpenReviewClient] = None):
+    def __init__(self, conference_id: str = 'ICLR.cc/2025/Conference', submission_invitation: Optional[str] = None, client: Optional[OpenReviewClient] = None):
+        self.conference_id = conference_id
+        self.submission_invitation = submission_invitation or f'{conference_id}/-/Submission'
         self.client = client or OpenReviewClient()
 
     def _get_content_value(self, content: dict, key: str, default: Any = None) -> Any:
@@ -62,7 +62,7 @@ class ICLRCrawler:
         )
 
     def get_papers(self, limit: int = 100, offset: int = 0) -> List[Paper]:
-        notes = self.client.get_submissions(self.SUBMISSION_INVITATION)
+        notes = self.client.get_submissions(self.submission_invitation)
         papers = []
         
         for note in notes[offset : offset + limit]:
@@ -114,7 +114,7 @@ class ICLRCrawler:
         Crawls papers and their reviews.
         Yields Paper objects with the 'reviews', 'decision', and 'avg_rating' fields populated.
         """
-        submissions = self.client.get_submissions(self.SUBMISSION_INVITATION)
+        submissions = self.client.get_submissions(self.submission_invitation)
         
         for note in tqdm(submissions[:limit], desc="Crawling Papers"):
             paper = self._parse_paper(note)

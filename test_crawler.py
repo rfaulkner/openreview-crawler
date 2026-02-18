@@ -1,9 +1,9 @@
-from iclr2025_crawler import ICLRCrawler
+from openreview_crawler import OpenReviewCrawler
 from pprint import pprint
 
 def main():
-    print("Initializing ICLR 2025 Crawler...")
-    crawler = ICLRCrawler()
+    print("Initializing OpenReview Crawler (ICLR 2025 default)...")
+    crawler = OpenReviewCrawler()
     
     print("Crawling top 5 papers and their reviews...")
     try:

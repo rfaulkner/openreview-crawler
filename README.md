@@ -1,6 +1,6 @@
-# ICLR Crawler
+# OpenReview Crawler
 
-A Python library to crawl papers, reviews, and decisions from the ICLR 2025 conference using the OpenReview API.
+A Python library to crawl papers, reviews, and decisions from OpenReview conferences (e.g., ICLR 2025).
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ Run the setup script to create a virtual environment and install dependencies:
 
 ### 2. Run Examples
 
-Run the example script to see the crawler in action (fetches top rated accepted papers and lowest rated rejected papers):
+Run the example script to see the crawler in action (fetches top rated accepted papers and lowest rated rejected papers from ICLR 2025 by default):
 
 ```bash
 ./launch.sh
@@ -32,31 +32,44 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Basic Crawling
+### Basic Crawling (ICLR 2025 Default)
 
 ```python
-from iclr2025_crawler import ICLRCrawler
+from openreview_crawler import OpenReviewCrawler
 
-crawler = ICLRCrawler()
+crawler = OpenReviewCrawler()
 
 # Fetch top 10 papers
 for paper in crawler.crawl(limit=10):
     print(f"{paper.title} (Decision: {paper.decision}, Avg Rating: {paper.avg_rating})")
 ```
 
-### Advanced Examples
+### Crawling Other Conferences
 
-#### 1. Fetch Top 5 Rated Accepted Papers
+You can initialize the crawler with a specific `conference_id` and `submission_invitation`.
 
 ```python
-from iclr2025_crawler import ICLRCrawler
+from openreview_crawler import OpenReviewCrawler
 
-crawler = ICLRCrawler()
+# Example for hypothetical conference
+crawler = OpenReviewCrawler(
+    conference_id='NeurIPS.cc/2024/Conference',
+    submission_invitation='NeurIPS.cc/2024/Conference/-/Submission'
+)
+```
+
+### Advanced Examples
+
+#### 1. Fetch Top 5 Rated Accepted Papers (ICLR 2025)
+
+```python
+from openreview_crawler import OpenReviewCrawler
+
+crawler = OpenReviewCrawler()
 accepted_papers = []
 
 print("Searching for top rated accepted papers...")
-# Note: In a real scenario, you might need to crawl more to find them. 
-# This example crawls up to 500 papers to find the top 5.
+# Note: In a real scenario, you might need to crawl more.
 for paper in crawler.crawl(limit=500):
     if paper.decision and 'Accept' in paper.decision and paper.avg_rating:
         accepted_papers.append(paper)
@@ -72,9 +85,9 @@ for paper in accepted_papers[:5]:
 #### 2. Fetch Lowest Rated Rejected Papers
 
 ```python
-from iclr2025_crawler import ICLRCrawler
+from openreview_crawler import OpenReviewCrawler
 
-crawler = ICLRCrawler()
+crawler = OpenReviewCrawler()
 rejected_papers = []
 
 print("Searching for lowest rated rejected papers...")

@@ -1,4 +1,4 @@
-from iclr2025_crawler import ICLRCrawler
+from openreview_crawler import OpenReviewCrawler
 
 def print_paper_details(paper):
     print(f"Title: {paper.title}")
@@ -16,7 +16,7 @@ def print_paper_details(paper):
     print("-" * 40)
 
 def main():
-    crawler = ICLRCrawler()
+    crawler = OpenReviewCrawler()
     
     print("Scanning papers (limit 200)...")
     papers = []
