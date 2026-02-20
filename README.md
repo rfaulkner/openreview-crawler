@@ -1,6 +1,6 @@
 # OpenReview Crawler
 
-A Python library to crawl papers, reviews, and decisions from OpenReview conferences (e.g., ICLR 2025).
+A Python library to crawl papers, reviews, and decisions from OpenReview conferences (ICLR, ICML, NeurIPS, ACL, COLM, AAAI, EMNLP, and more).
 
 ## Quick Start
 
@@ -16,17 +16,29 @@ Run the setup script to create a virtual environment and install dependencies:
 
 ### 2. Run Crawler
 
-Run the crawler script to fetch papers and export them to JSON (fetches top rated accepted papers and lowest rated rejected papers from ICLR 2025 by default):
+Each conference has a dedicated launch script inside the `launch/` folder. Run the one for your target conference:
 
 ```bash
-./launch.sh
+# ICLR 2025 (default)
+./launch/iclr_2025.sh
+
+# Other supported conferences
+./launch/icml_2025.sh
+./launch/neurips_2025.sh
+./launch/acl_2025.sh
+./launch/colm_2025.sh
+./launch/aaai_2025.sh
+./launch/emnlp_2025.sh
 ```
 
-Or run the python script directly with arguments:
+Or run `crawl.py` directly with the `--conference` and `--limit` flags:
 
 ```bash
-# Fetch top/bottom 10 papers
-python crawl.py --limit 10
+# Fetch top/bottom 10 papers from NeurIPS 2025
+python crawl.py --conference NeurIPS2025 --limit 10
+
+# Available conference keys:
+# ICLR2025, ICML2025, NeurIPS2025, ACL2025, COLM2025, AAAI2025, EMNLP2025
 ```
 
 ## Manual Installation
@@ -53,16 +65,30 @@ for paper in crawler.crawl(limit=10):
 
 ### Crawling Other Conferences
 
-You can initialize the crawler with a specific `conference_id` and `submission_invitation`.
+Use the `--conference` flag when calling `crawl.py` to target a specific conference:
+
+```bash
+python crawl.py --conference ICML2025 --limit 20
+```
+
+The supported conference keys and their OpenReview venue IDs are defined in `crawl.py`:
+
+| Key | OpenReview Venue ID |
+|---|---|
+| `ICLR2025` | `ICLR.cc/2025/Conference` |
+| `ICML2025` | `ICML.cc/2025/Conference` |
+| `NeurIPS2025` | `NeurIPS.cc/2025/Conference` |
+| `ACL2025` | `aclweb.org/ACL/2025/Conference` |
+| `COLM2025` | `colmweb.org/COLM/2025/Conference` |
+| `AAAI2025` | `AAAI.org/2025/Conference` |
+| `EMNLP2025` | `aclweb.org/EMNLP/2025/Conference` |
+
+You can also pass a `conference_id` directly when using the library:
 
 ```python
 from openreview_crawler import OpenReviewCrawler
 
-# Example for hypothetical conference
-crawler = OpenReviewCrawler(
-    conference_id='NeurIPS.cc/2024/Conference',
-    submission_invitation='NeurIPS.cc/2024/Conference/-/Submission'
-)
+crawler = OpenReviewCrawler(conference_id='ICML.cc/2025/Conference')
 ```
 
 ### Advanced Examples

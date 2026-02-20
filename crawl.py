@@ -1,6 +1,19 @@
 import argparse
 from openreview_crawler import OpenReviewCrawler, export_papers_to_json
 
+# Mapping of friendly conference names to their OpenReview venue IDs.
+CONFERENCE_IDS = {
+    "ICLR2025":    "ICLR.cc/2025/Conference",
+    "ICML2025":    "ICML.cc/2025/Conference",
+    "NeurIPS2025": "NeurIPS.cc/2025/Conference",
+    "ACL2025":     "aclweb.org/ACL/2025/Conference",
+    "COLM2025":    "colmweb.org/COLM/2025/Conference",
+    "AAAI2025":    "AAAI.org/2025/Conference",
+    "EMNLP2025":   "aclweb.org/EMNLP/2025/Conference",
+}
+
+DEFAULT_CONFERENCE = "ICLR2025"
+
 def print_paper_details(paper):
     print(f"Title: {paper.title}")
     print(f"Decision: {paper.decision}")
@@ -9,10 +22,21 @@ def print_paper_details(paper):
 
 def main():
     parser = argparse.ArgumentParser(description="Crawl OpenReview papers and export to JSON.")
+    parser.add_argument(
+        '--conference',
+        type=str,
+        default=DEFAULT_CONFERENCE,
+        choices=list(CONFERENCE_IDS.keys()),
+        help=f"Conference to crawl (default: {DEFAULT_CONFERENCE}). "
+             f"Choices: {', '.join(CONFERENCE_IDS.keys())}"
+    )
     parser.add_argument('--limit', type=int, default=5, help='Number of papers to find for each category (default: 5)')
     args = parser.parse_args()
 
-    crawler = OpenReviewCrawler()
+    conference_id = CONFERENCE_IDS[args.conference]
+    print(f"Conference: {args.conference}  →  venue ID: {conference_id}")
+
+    crawler = OpenReviewCrawler(conference_id=conference_id)
     
     print(f"Scanning papers to find top {args.limit} accepted and bottom {args.limit} rejected...")
     
