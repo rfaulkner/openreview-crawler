@@ -8,8 +8,8 @@ CONFERENCE_IDS = {
     "NeurIPS2025": "NeurIPS.cc/2025/Conference",
     "ACL2025":     "aclweb.org/ACL/2025/Conference",
     "COLM2025":    "colmweb.org/COLM/2025/Conference",
-    "AAAI2025":    "AAAI.org/2025/Conference",
-    "EMNLP2025":   "aclweb.org/EMNLP/2025/Conference",
+    "AAAI2025":    "AAAI.org/2025",
+    "EMNLP2025":   "EMNLP/2025/Conference",
 }
 
 DEFAULT_CONFERENCE = "ICLR2025"
@@ -44,8 +44,8 @@ def main():
     # Since we can't filter by decision/rating in the API query easily without fetching,
     # we'll fetch a larger batch. 
     # Heuristic: fetch 10x the limit to have a good chance, or up to 500 max to avoid taking forever.
-    scan_limit = min(args.limit * 20, 1000) 
-    
+    scan_limit = min(args.limit * 200, 25000) 
+
     papers = []
     for paper in crawler.crawl(limit=scan_limit):
         if paper.decision: 
@@ -68,10 +68,10 @@ def main():
     print("="*50)
     for p in top_accepted:
         print_paper_details(p)
-    
+
     # Export High Quality
     if top_accepted:
-        export_papers_to_json(top_accepted, "high_quality_papers.json")
+        export_papers_to_json(top_accepted, f"example_out/{args.conference}_{args.limit}_high_quality_papers.json")
 
     print("\n" + "="*50)
     print(f" TOP {len(bottom_rejected)} REJECTED PAPERS (Lowest Rated)")
@@ -81,7 +81,7 @@ def main():
 
     # Export Low Quality
     if bottom_rejected:
-        export_papers_to_json(bottom_rejected, "low_quality_papers.json")
+        export_papers_to_json(bottom_rejected, f"example_out/{args.conference}_{args.limit}_low_quality_papers.json")
 
 if __name__ == "__main__":
     main()
